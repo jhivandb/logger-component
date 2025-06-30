@@ -9,9 +9,12 @@ RUN go build -o main .
 
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
-WORKDIR /root/
+RUN adduser -D -u 1000 appuser
+WORKDIR /app
 
-COPY --from=builder /app/main .
+COPY --from=builder --chown=appuser:appuser /app/main .
+
+USER appuser
 
 EXPOSE 8080
 
